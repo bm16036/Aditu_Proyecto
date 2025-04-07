@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_aditu
+    environment:
+      POSTGRES_DB: aditudb
+      POSTGRES_USER: adituuser
+      POSTGRES_PASSWORD: aditupass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: aditu_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/aditudb
+      SPRING_DATASOURCE_USERNAME: adituuser
+      SPRING_DATASOURCE_PASSWORD: aditupass
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
